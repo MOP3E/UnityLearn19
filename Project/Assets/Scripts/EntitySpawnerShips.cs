@@ -40,7 +40,7 @@ namespace SpaceShooter
         {
             for (int i = 0; i < _spawnCount; i++)
             {
-                SpawnShips(_shipsPrefabs, false, Vector2.zero);
+                SpawnShips(_shipsPrefabs);
             }
         }
 
@@ -48,23 +48,18 @@ namespace SpaceShooter
         /// Размещение мусора на игровом поле.
         /// </summary>
         /// <param name="debrisPrefabs">Список префабов для размещения.</param>
-        /// <param name="setPosition">Размещать префабы строго в заданной позиции.</param>
-        /// <param name="position">Позиция размещения префабов.</param>
-        private void SpawnShips(Destructible[] debrisPrefabs, bool setPosition, Vector2 position)
+        private void SpawnShips(Destructible[] debrisPrefabs)
         {
             //выбрать префаб корабля и создать корабль
             int index = UnityEngine.Random.Range(0, debrisPrefabs.Length);
             GameObject ship = Instantiate(debrisPrefabs[index].gameObject);
             //задать команду корабля
             ship.GetComponent<SpaceShip>().TeamId = _shipsTeam;
-            //добавить обработчик события уничтожения мусора
-            ship.GetComponent<Destructible>().DestructionUnity.AddListener(Call);
-            //ship.GetComponent<Destructible>().Destruction += OnShipDestruction;
 
             //задать случайную позицию корабля
-            ship.transform.position = setPosition ? position : _area.GetRandomInsideArea();
+            ship.transform.position = _area.GetRandomInsideArea();
             //добавить обработчик события уничтожения корабля
-            ship.GetComponent<Destructible>().Destruction += OnShipDestruction;
+            ship.GetComponent<Destructible>().DestructionUnity.AddListener(Call);
 
             _shipsCount++;
             Debug.Log($"_shipsCount++ = {_shipsCount}");
@@ -80,7 +75,7 @@ namespace SpaceShooter
             //при уничтожении корабля нужно создать новый корабль
             while (_shipsCount < _spawnCount)
             {
-                SpawnShips(_shipsPrefabs, false, Vector2.zero);
+                SpawnShips(_shipsPrefabs);
             }
         }
 
@@ -97,7 +92,7 @@ namespace SpaceShooter
             //при уничтожении корабля нужно создать новый корабль
             while (_shipsCount < _spawnCount)
             {
-                SpawnShips(_shipsPrefabs, false, Vector2.zero);
+                SpawnShips(_shipsPrefabs);
             }
         }
     }
